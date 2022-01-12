@@ -42,6 +42,10 @@ Load and save flows from/to the file system.
 [<img src="https://img.shields.io/github/license/aschaeffer/inexor-rgf-plugin-flow-manager">](https://github.com/aschaeffer/inexor-rgf-plugin-flow-manager/blob/main/LICENSE)
 [<img src="https://img.shields.io/discord/698219248954376256?logo=discord">](https://discord.com/invite/acUW8k7)
 
+### TODO
+
+* Provide Command "flow:load <path>" (requires a command execution system)
+
 ### Thanks to
 
 * https://github.com/xd009642/tarpaulin
