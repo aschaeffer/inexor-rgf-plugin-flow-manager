@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::fs;
 use std::fs::File;
 use std::io::BufReader;
@@ -76,7 +75,6 @@ impl FlowManager for FlowManagerImpl {
             error!("Not a directory: {:?}", path);
             return;
         }
-        let result = fs::read_dir(path);
         match fs::read_dir(path) {
             Ok(dir) => {
                 for entry in dir.into_iter() {
