@@ -64,7 +64,8 @@ impl FlowManager for FlowManagerImpl {
     fn load_flows(&self, flow_locations: Vec<FlowLocation>) {
         for flow_location in flow_locations.into_iter() {
             if flow_location.active {
-                let path = Path::new(flow_location.path.as_str());
+                let path = shellexpand::tilde(flow_location.path.as_str());
+                let path = Path::new(path.as_ref());
                 self.load_flows_by_path_recursively(path);
             }
         }
