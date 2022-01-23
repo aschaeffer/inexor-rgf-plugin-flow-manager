@@ -44,7 +44,21 @@ Load and save flows from/to the file system.
 
 ### TODO
 
-* Provide Command "flow:load <path>" (requires a command execution system)
+-[ ] Provide command "flow:load <path>" (requires a command execution system)
+-[ ] Remote repositories
+  -[ ] Clone git repository
+  -[ ] Fetch / update git repository
+  -[ ] List flows in remote repository
+  -[ ] Load flow from remote repository
+-[ ] Provide remote flow repositories
+  -[ ] Flow repository for home automation
+    -[ ] Kodi
+    -[ ] Shelly via MQTT
+  -[ ] Flow repository for desktop automation
+    -[ ] Tray
+    -[ ] Stream Deck
+    -[ ] Audio player with MPRIS
+    -[ ] Web user interface for starting desktop applications
 
 ### Thanks to
 
