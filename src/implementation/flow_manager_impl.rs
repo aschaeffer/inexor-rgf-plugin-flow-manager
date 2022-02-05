@@ -4,10 +4,10 @@ use std::io::BufReader;
 use std::path::Path;
 use std::sync::{Arc, RwLock};
 
+use crate::di::*;
 use crate::model::Flow;
 use async_trait::async_trait;
 use log::{debug, error};
-use waiter_di::*;
 
 use crate::api::FlowManager;
 use crate::config::{FlowLocation, FlowLocations};

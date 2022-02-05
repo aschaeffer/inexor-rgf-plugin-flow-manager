@@ -1,9 +1,9 @@
 use std::env;
 use std::sync::{Arc, RwLock};
 
+use crate::di::*;
 use async_trait::async_trait;
 use log::debug;
-use waiter_di::*;
 
 use crate::api::FlowManager;
 use crate::implementation::FlowManagerImpl;
