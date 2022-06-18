@@ -14,8 +14,12 @@ type Component {
   entityTypes: [EntityType!]!
   "The extensions which are defined by the component."
   extensions(name: String): [Extension!]!
+  "Query which relation types are using this component as inbound type"
+  inboundOf: [RelationType!]!
   "The name of the component."
   name: String!
+  "Query which relation types are using this component as outbound type"
+  outboundOf: [RelationType!]!
   "The properties which are applied on entity or relation instances."
   properties(name: String): [PropertyType!]!
   "Query which relation types are using this component"
@@ -32,6 +36,18 @@ In contrast to the entity type the entity instance stores values in it's
 properties.
 """
 type EntityInstance {
+  """
+
+  List of behaviours which have been actually applied on the entity instance including
+  behaviours which have been applied after creation.
+  """
+  behaviours: [String!]!
+  """
+
+  List of components which have been actually applied on the entity instance including
+  components which have been added after creation.
+  """
+  components: [String!]!
   "The description of the entity instance."
   description: String!
   "The unique identifier of the entity instance."
@@ -69,8 +85,6 @@ type EntityInstance {
 
 "Entity types defines the type of entity instance."
 type EntityType {
-  "The behaviours."
-  behaviours: [String!]!
   "The components of the entity type."
   components: [Component!]!
   "Textual description of the entity type."
@@ -160,6 +174,10 @@ type Instances {
   If an entity type is given, only entity instances of the given type are returned.
   """
   entities(
+    "Filters the entity instances by applied behaviours."
+    behaviours: [String!],
+    "Filters the entity instances by applied components."
+    components: [String!],
     "Returns only the entity instance with the given id."
     id: UUID,
     "Returns the entity instance with the given label."
@@ -179,6 +197,10 @@ type Instances {
   combined.
   """
   relations(
+    "Filters the relation instances by applied behaviours."
+    behaviours: [String!],
+    "Filters the relation instances by applied components."
+    components: [String!],
     "Filters the relation instances by the id of the inbound entity instance"
     inboundId: UUID,
     "Filters the relation instances by the entity type of the inbound entity instance"
@@ -227,6 +249,8 @@ type MutationEntityInstances {
   of the property.
   """
   create(
+    "Creates the entity instance with the given components."
+    components: [String!],
     "The id of the entity instance. If none is given a random uuid will be generated."
     id: UUID,
     properties: [PropertyInstanceDefinition!],
@@ -254,11 +278,16 @@ type MutationEntityInstances {
   tick(id: UUID!): EntityInstance!
   "Updates the properties of the entity instance with the given id."
   update(
+    "Updates the entity instance with the given label."
+    addComponents: [String!],
     "Updates the entity instance with the given id."
     id: UUID,
     "Updates the entity instance with the given label."
     label: String,
-    properties: [PropertyInstanceDefinition!]!
+    "Updates the given properties"
+    properties: [PropertyInstanceDefinition!],
+    "Updates the entity instance with the given label."
+    removeComponents: [String!]
   ): EntityInstance!
 }
 
@@ -266,7 +295,6 @@ type MutationEntityInstances {
 type MutationEntityTypes {
   "Creates a new entity type with the given name and components and properties."
   create(
-    behaviours: [String!],
     components: [String!],
     "The extension on the entity type."
     extensions: [ExtensionDefinition!],
@@ -358,7 +386,12 @@ type MutationRelationInstances {
   If properties are not provided, default values will be used depending on the data type
   of the property.
   """
-  create(edgeKey: EdgeKeyDefinition!, properties: [PropertyInstanceDefinition!]): RelationInstance!
+  create(
+    "Creates the relation instance with the given components."
+    components: [String!],
+    edgeKey: EdgeKeyDefinition!,
+    properties: [PropertyInstanceDefinition!]
+  ): RelationInstance!
   "Deletes an relation instance."
   delete(edgeKey: EdgeKeyDefinition!): Boolean!
   """
@@ -374,7 +407,15 @@ type MutationRelationInstances {
   """
   tick(edgeKey: EdgeKeyDefinition!): RelationInstance!
   "Updates the properties of the given relation instance by edge key."
-  update(edgeKey: EdgeKeyDefinition!, properties: [PropertyInstanceDefinition!]!): RelationInstance!
+  update(
+    "Adds the components with the given name"
+    addComponents: [String!],
+    edgeKey: EdgeKeyDefinition!,
+    "Updates the given properties"
+    properties: [PropertyInstanceDefinition!],
+    "Removes the components with the given name"
+    removeComponents: [String!]
+  ): RelationInstance!
 }
 
 "Mutations for relation types"
@@ -386,7 +427,6 @@ type MutationRelationTypes {
   The outbound entity type and the inbound entity type must be specified.
   """
   create(
-    behaviours: [String!],
     "Adds the given components to the newly created relation type."
     components: [String!],
     "The extension on the relation type."
@@ -481,6 +521,18 @@ In contrast to the relation type, the relation instance stores values/
 documents in it's properties.
 """
 type RelationInstance {
+  """
+
+  List of behaviours which have been actually applied on the relation instance including
+  behaviours which have been applied after creation.
+  """
+  behaviours: [String!]!
+  """
+
+  List of components which have been actually applied on the relation instance including
+  components which have been added after creation.
+  """
+  components: [String!]!
   "Textual description of the relation instance."
   description: String!
   """
@@ -526,8 +578,6 @@ The relation type defines the entity types of the outbound and inbound entity in
 Also the relation type defines the properties of the relation instance.
 """
 type RelationType {
-  "The behaviours."
-  behaviours: [String!]!
   "The relation type composes it's properties by these components."
   components: [Component!]!
   "Textual description of the relation type."
@@ -543,7 +593,9 @@ type RelationType {
   fullName: String!
   "The relation type belongs to the given group of relation types."
   group: String!
-  "The inbound entity type."
+  "The inbound components."
+  inboundComponents: [Component!]!
+  "The inbound entity type(s)."
   inboundTypes: [EntityType!]!
   """
 
@@ -555,7 +607,9 @@ type RelationType {
   (without type suffix).
   """
   name: String!
-  "The outbound entity type."
+  "The outbound components."
+  outboundComponents: [Component!]!
+  "The outbound entity type(s)."
   outboundTypes: [EntityType!]!
   """
 
